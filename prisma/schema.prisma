@@ -1,0 +1,106 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model for admin authentication
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  password  String
+  role      String   @default("admin")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Inquiry model for customer inquiries
+model Inquiry {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  phone       String?
+  eventType   String?
+  eventDate   DateTime?
+  guestCount  Int?
+  message     String
+  status      String   @default("new") // new, responded, confirmed, cancelled
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Menu item model with enhanced categorization
+model MenuItem {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  price       Float?
+  category    String   // appetizer, main, dessert, beverage, bread, rice, dal
+  subcategory String?  // north_indian, south_indian, chinese, continental, jain, regional
+  dietType    String   @default("vegetarian") // vegetarian, vegan, jain
+  spiceLevel  String?  // mild, medium, spicy
+  ingredients String?  // JSON array of ingredients
+  allergens   String?  // JSON array of common allergens
+  cookingTime Int?     // in minutes
+  imageUrl    String?
+  isAvailable Boolean  @default(true)
+  isFeatured  Boolean  @default(false)
+  sortOrder   Int?     // for manual ordering
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Package model for catering packages
+model Package {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  pricePerPerson Float
+  minGuests   Int
+  maxGuests   Int?
+  items       String   // JSON string of menu items included
+  imageUrl    String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Testimonial model
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  rating    Int      // 1-5 stars
+  comment   String
+  imageUrl  String?
+  isApproved Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Enhanced Gallery model for photos with categories
+model GalleryImage {
+  id          String   @id @default(cuid())
+  title       String?
+  description String?
+  imageUrl    String
+  thumbnailUrl String? // for optimized loading
+  category    String   @default("food") // food, events, setup, behind_scenes, testimonials
+  subcategory String?  // appetizers, mains, desserts, weddings, corporate, etc.
+  tags        String?  // JSON array of searchable tags
+  altText     String?  // for accessibility
+  isActive    Boolean  @default(true)
+  isFeatured  Boolean  @default(false)
+  sortOrder   Int?     // for manual ordering
+  uploadedBy  String?  // user who uploaded
+  fileSize    Int?     // in bytes
+  dimensions  String?  // "width x height"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

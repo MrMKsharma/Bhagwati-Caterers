@@ -1,0 +1,228 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Inter, Arial, Helvetica, sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
+
+/* Smooth transitions */
+* {
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+/* Custom button styles */
+.btn-primary {
+  @apply bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105;
+}
+
+.btn-secondary {
+  @apply bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-3 px-6 rounded-lg transition-all duration-200;
+}
+
+/* Custom Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseSlow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes bounceSubtle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.animate-pulse-slow {
+  animation: pulseSlow 3s ease-in-out infinite;
+}
+
+.animate-bounce-subtle {
+  animation: bounceSubtle 2s ease-in-out infinite;
+}
+
+.delay-100 {
+  animation-delay: 0.1s;
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+
+.delay-200 {
+  animation-delay: 0.2s;
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+
+/* Gradient Text */
+.gradient-text {
+  background: linear-gradient(90deg, #ea580c, #f59e0b, #ea580c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Float Animations for Regional Graphics */
+@keyframes float1 {
+  0%, 100% { 
+    transform: translateY(0) rotate(0deg); 
+  }
+  50% { 
+    transform: translateY(-20px) rotate(10deg); 
+  }
+}
+
+@keyframes float2 {
+  0%, 100% { 
+    transform: translateY(0) rotate(0deg); 
+  }
+  50% { 
+    transform: translateY(-15px) rotate(-8deg); 
+  }
+}
+
+.animate-float1 {
+  animation: float1 8s ease-in-out infinite;
+}
+
+.animate-float2 {
+  animation: float2 8s ease-in-out infinite;
+}
+
+/* Devanagari Font Support */
+.devanagari-text {
+  line-height: 1.6;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+.devanagari-heading {
+  line-height: 1.3;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.devanagari-subheading {
+  line-height: 1.5;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+.devanagari-paragraph {
+  line-height: 1.8;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+.devanagari-list {
+  line-height: 1.8;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+/* Global Devanagari support for common elements */
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.4;
+}
+
+/* Ensure proper line height for text containing Devanagari characters */
+p:lang(hi), span:lang(hi), div:lang(hi) {
+  line-height: 1.6;
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
+}
+
+/* Animation Delays */
+.animation-delay-0-5s {
+  animation-delay: 0.5s;
+}
+
+.animation-delay-1s {
+  animation-delay: 1s;
+}
+
+.animation-delay-3s {
+  animation-duration: 3s;
+}
+
+.animation-delay-3s-1s {
+  animation-duration: 3s;
+  animation-delay: 1s;
+}
+
+/* Hover Effects */
+.hover\:rotate-6:hover {
+  transform: rotate(6deg);
+}
+
+.hover\:translate-x-2:hover {
+  transform: translateX(0.5rem);
+}
+
+.hover\:translate-y-1:hover {
+  transform: translateY(-0.25rem);
+}
+
+.hover\:translate-y-2:hover {
+  transform: translateY(-0.5rem);
+}
+
+.hover\:scale-105:hover {
+  transform: scale(1.05);
+}
+
+.hover\:scale-110:hover {
+  transform: scale(1.1);
+}
+
+.hover\:scale-125:hover {
+  transform: scale(1.25);
+}

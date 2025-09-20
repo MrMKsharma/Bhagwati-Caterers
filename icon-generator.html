@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Icon Generator</title>
+</head>
+<body>
+  <canvas id="canvas" width="512" height="512" style="border: 1px solid #ccc;"></canvas>
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Background
+    ctx.fillStyle = '#ea580c'; // Orange theme color
+    ctx.fillRect(0, 0, 512, 512);
+    
+    // Add text
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 72px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('EC', 256, 256);
+    
+    // Convert to downloadable image
+    const link = document.createElement('a');
+    link.download = 'icon-512x512.png';
+    link.href = canvas.toDataURL();
+    link.click();
+  </script>
+</body>
+</html>

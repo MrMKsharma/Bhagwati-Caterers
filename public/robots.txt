@@ -1,0 +1,42 @@
+User-agent: *
+Allow: /
+
+# Important pages for crawling
+Allow: /about
+Allow: /services
+Allow: /menu
+Allow: /packages
+Allow: /gallery
+Allow: /contact
+
+# Block admin routes from search engines
+Disallow: /admin/
+Disallow: /api/admin/
+Disallow: /api/auth/
+
+# Block sensitive API routes
+Disallow: /api/contact
+Disallow: /api/inquiries
+
+# Allow public API routes
+Allow: /api/testimonials
+Allow: /api/gallery
+Allow: /api/menu-items
+Allow: /api/packages
+
+# PWA and static files
+Allow: /manifest.json
+Allow: /sw.js
+Allow: /offline
+Allow: /browserconfig.xml
+
+# Static assets
+Allow: /icons/
+Allow: /images/
+Allow: /_next/static/
+
+# Crawl delay
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://elite-caterers.com/sitemap.xml
