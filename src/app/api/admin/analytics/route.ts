@@ -1,13 +1,14 @@
 import { NextResponse } from 'next/server'
 import { checkPermission } from '@/lib/auth-helpers'
 import { prisma } from '@/lib/db'
+import { AnalyticsResponse, ApiErrorResponse } from '@/types/api'
 
 // GET - Fetch analytics data
-export async function GET(request: Request) {
+export async function GET(request: Request): Promise<NextResponse<AnalyticsResponse | ApiErrorResponse>> {
   const permissionCheck = await checkPermission(request, 'analytics', 'read')
   
   if (!permissionCheck.authorized) {
-    return permissionCheck.response
+    return permissionCheck.response! as NextResponse<ApiErrorResponse>
   }
 
   try {
@@ -16,8 +17,9 @@ export async function GET(request: Request) {
     const now = new Date()
     const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
     const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
-    const startOfYear = new Date(now.getFullYear(), 0, 1)
+    // Date ranges for future use
+    // const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
+    // const startOfYear = new Date(now.getFullYear(), 0, 1)
 
     // Basic counts
     const totalInquiries = await prisma.inquiry.count()
@@ -168,7 +170,7 @@ export async function GET(request: Request) {
       recentActivity,
     })
 
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Analytics fetch error:', error)
     return NextResponse.json(
       { error: 'Failed to fetch analytics data' },

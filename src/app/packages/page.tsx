@@ -1,32 +1,16 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
-import { Users, Calendar, Utensils, Gift, Star, CheckCircle, Phone, Mail, Crown, Sparkles, Heart, Award } from 'lucide-react'
+import { Users, Utensils, Gift, Star, CheckCircle, Crown, Sparkles, Heart, Award } from 'lucide-react'
 import SEOHead from '@/components/seo/SEOHead'
-
-interface Package {
-  id: string
-  name: string
-  description: string
-  pricePerPerson: number
-  minGuests: number
-  maxGuests?: number
-  items: string
-  imageUrl?: string
-  isActive: boolean
-  createdAt: string
-}
+import { Package, DisplayPackage } from '@/types/api'
 
 export default function PackagesPage() {
   const [packages, setPackages] = useState<Package[]>([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    fetchPackages()
-  }, [])
-
-  const fetchPackages = async () => {
+  const fetchPackages = useCallback(async () => {
     try {
       const response = await fetch('/api/packages')
       if (response.ok) {
@@ -38,17 +22,20 @@ export default function PackagesPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    fetchPackages()
+  }, [fetchPackages])
 
   // शुद्ध शाकाहारी पॅकेजेस - Pure Vegetarian packages
-  const fallbackPackages = [
+  const fallbackPackages: DisplayPackage[] = [
     {
       id: '1',
       name: 'सामान्य शुद्ध शाकाहारी पॅकेज',
       englishName: 'Basic Pure Veg Package',
       description: 'छोट्या कुटुंबीय मेळाव्यांसाठी पारंपारिक शाकाहारी जेवण',
       englishDescription: 'Traditional vegetarian fare for intimate family gatherings',
-      pricePerPerson: 249,
       minGuests: 25,
       maxGuests: 75,
       items: JSON.stringify([
@@ -60,6 +47,7 @@ export default function PackagesPage() {
         'व्यावसायिक सेवा कर्मचारी • Professional Service Staff',
         'ताज्या फुलांसह मूलभूत टेबल सेटअप • Basic Table Setup with Fresh Flowers'
       ]),
+      pricePerPerson: 249,
       isActive: true,
       createdAt: new Date().toISOString(),
       popular: false,
@@ -72,7 +60,6 @@ export default function PackagesPage() {
       englishName: 'Premium Pure Veg Package',
       description: 'पारंपारिक विशेषतांसह अस्सल शाकाहारी पाककृती',
       englishDescription: 'Authentic vegetarian cuisine with traditional specialties',
-      pricePerPerson: 399,
       minGuests: 50,
       maxGuests: 150,
       items: JSON.stringify([
@@ -86,6 +73,7 @@ export default function PackagesPage() {
         'पारंपारिक पोशाखातील प्रीमियम सेवा कर्मचारी • Premium Service Staff with Traditional Attire',
         'मंडप शैलीतील सुंदर सजावट • Elegant Mandap-style Decoration'
       ]),
+      pricePerPerson: 399,
       isActive: true,
       createdAt: new Date().toISOString(),
       popular: true,
@@ -98,7 +86,6 @@ export default function PackagesPage() {
       englishName: 'Royal Pure Veg Package',
       description: 'राजसी वागणुकीसह विलासी शाकाहारी मेजवानी',
       englishDescription: 'Luxurious vegetarian feast with royal treatment',
-      pricePerPerson: 599,
       minGuests: 100,
       maxGuests: 500,
       items: JSON.stringify([
@@ -113,6 +100,7 @@ export default function PackagesPage() {
         'समर्पित इव्हेंट मॅनेजर आणि प्रीमियम कर्मचारी • Dedicated Event Manager and Premium Staff',
         'पारंपारिक घटक आणि प्रकाशासह राजसी सजावट • Royal Decor with Traditional Elements and Lighting'
       ]),
+      pricePerPerson: 599,
       isActive: true,
       createdAt: new Date().toISOString(),
       popular: false,
@@ -195,15 +183,14 @@ export default function PackagesPage() {
                 features = pkg.items ? pkg.items.split(',').map((item: string) => item.trim()) : []
               }
               
-              const isPopular = (pkg as any).popular || pkg.name.toLowerCase().includes('premium')
-              const pkgData = pkg as any
+              const isPopular = pkg.popular || pkg.name.toLowerCase().includes('premium')
               
               return (
                 <div key={pkg.id} className={`group bg-white rounded-3xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 hover:scale-105 relative overflow-hidden border-2 ${
                   isPopular ? 'border-orange-500 ring-2 ring-orange-200' : 'border-gray-200 hover:border-orange-300'
                 }`}>
                   {/* Gradient Header */}
-                  <div className={`absolute top-0 left-0 right-0 h-24 bg-gradient-to-r ${pkgData.color || 'from-gray-400 to-gray-500'} rounded-t-3xl`}></div>
+                  <div className={`absolute top-0 left-0 right-0 h-24 bg-gradient-to-r ${pkg.color || 'from-gray-400 to-gray-500'} rounded-t-3xl`}></div>
                   
                   {/* Decorative Elements */}
                   <div className="absolute top-2 right-2 w-16 h-16 bg-white/20 rounded-full"></div>
@@ -220,12 +207,12 @@ export default function PackagesPage() {
                     {/* Icon and Title */}
                     <div className="text-center mb-4">
                       <div className="bg-white shadow-lg p-3 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center text-3xl group-hover:rotate-12 transition-transform duration-300 -mt-8">
-                        {pkgData.icon || '🍽️'}
+                        {pkg.icon || '🍽️'}
                       </div>
                       <h3 className="text-xl font-bold text-gray-800 mb-1">{pkg.name}</h3>
-                      <p className="text-sm text-gray-600 mb-2">{pkgData.englishName}</p>
+                      <p className="text-sm text-gray-600 mb-2">{pkg.englishName}</p>
                       <p className="text-gray-700 text-sm mb-2">{pkg.description}</p>
-                      <p className="text-xs text-gray-500">{pkgData.englishDescription}</p>
+                      <p className="text-xs text-gray-500">{pkg.englishDescription}</p>
                     </div>
                     
                     {/* Pricing */}
@@ -242,7 +229,7 @@ export default function PackagesPage() {
                     
                     {/* Features */}
                     <div className="mb-6">
-                      <h4 className="font-semibold text-gray-800 mb-3 text-center text-sm">यामध्ये समाविष्ट आहे • What's Included:</h4>
+                      <h4 className="font-semibold text-gray-800 mb-3 text-center text-sm">यामध्ये समाविष्ट आहे • What&apos;s Included:</h4>
                       <div className="bg-gray-50 rounded-xl p-3 max-h-48 overflow-y-auto">
                         <ul className="space-y-1">
                           {features.slice(0, 6).map((feature: string, index: number) => (
@@ -346,7 +333,7 @@ export default function PackagesPage() {
               शाकाहारी केटरिंग अनुभव तयार करण्यासाठी आमच्याशी संपर्क साधा.
             </p>
             <p className="text-sm text-white/80 mb-12">
-              Don't see exactly what you're looking for? Contact us to create a personalized 
+              Don&apos;t see exactly what you&apos;re looking for? Contact us to create a personalized 
               vegetarian catering experience tailored to your unique event needs.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-6">

@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { Plus, Edit, Trash2, Search, Filter, Leaf, Star, Clock, Flame } from 'lucide-react'
+import { useEffect, useState, useCallback } from 'react'
+import { Plus, Edit, Trash2, Search, Filter } from 'lucide-react'
+import Image from 'next/image'
 
 interface MenuItem {
   id: string
@@ -58,34 +59,9 @@ export default function MenuItemsPage() {
     { value: 'snack', label: 'Snacks' }
   ]
 
-  const subcategories = {
-    appetizer: ['north_indian', 'south_indian', 'chinese', 'continental'],
-    main: ['north_indian', 'south_indian', 'chinese', 'continental', 'jain'],
-    dessert: ['traditional', 'modern', 'seasonal'],
-    beverage: ['hot', 'cold', 'fresh_juice', 'lassi'],
-    bread: ['roti', 'naan', 'paratha', 'south_indian'],
-    rice: ['plain', 'flavored', 'biryani', 'south_indian'],
-    dal: ['north_indian', 'south_indian', 'regional'],
-    snack: ['fried', 'steamed', 'baked', 'chaat']
-  }
 
-  const dietTypes = [
-    { value: 'vegetarian', label: 'Vegetarian', icon: '🥬' },
-    { value: 'vegan', label: 'Vegan', icon: '🌱' },
-    { value: 'jain', label: 'Jain', icon: '🕉️' }
-  ]
 
-  const spiceLevels = [
-    { value: 'mild', label: 'Mild', icon: '🟢' },
-    { value: 'medium', label: 'Medium', icon: '🟡' },
-    { value: 'spicy', label: 'Spicy', icon: '🔴' }
-  ]
-
-  useEffect(() => {
-    fetchMenuItems()
-  }, [])
-
-  const fetchMenuItems = async () => {
+  const fetchMenuItems = useCallback(async () => {
     try {
       const response = await fetch('/api/admin/menu-items')
       if (response.ok) {
@@ -99,7 +75,11 @@ export default function MenuItemsPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    fetchMenuItems()
+  }, [fetchMenuItems])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -283,7 +263,7 @@ export default function MenuItemsPage() {
           <div key={item.id} className="bg-white shadow rounded-lg overflow-hidden">
             <div className="h-48 bg-gradient-to-r from-orange-200 to-orange-300 flex items-center justify-center">
               {item.imageUrl ? (
-                <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
+                <Image src={item.imageUrl} alt={item.name} fill className="object-cover" />
               ) : (
                 <span className="text-orange-800 font-medium">No Image</span>
               )}

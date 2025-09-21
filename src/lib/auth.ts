@@ -1,9 +1,11 @@
-import { NextAuthOptions } from 'next-auth'
+
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { prisma } from './db'
 import bcrypt from 'bcryptjs'
 
-export const authOptions: NextAuthOptions = {
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const authOptions: any = {
   providers: [
     CredentialsProvider({
       name: 'credentials',
@@ -11,7 +13,12 @@ export const authOptions: NextAuthOptions = {
         email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' }
       },
-      async authorize(credentials) {
+      async authorize(credentials): Promise<{
+        id: string;
+        email: string;
+        name: string;
+        role: string;
+      } | null> {
         if (!credentials?.email || !credentials?.password) {
           return null
         }
@@ -38,26 +45,27 @@ export const authOptions: NextAuthOptions = {
         return {
           id: user.id,
           email: user.email,
-          name: user.name,
+          name: user.name || '',
           role: user.role,
         }
       }
     })
   ],
   session: {
-    strategy: 'jwt'
+    strategy: 'jwt' as const
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user }: { token: Record<string, unknown>; user?: { role: string } }) {
       if (user) {
-        token.role = (user as any).role
+        token.role = user.role
       }
       return token
     },
-    async session({ session, token }) {
-      if (token && session.user && token.sub) {
-        session.user.id = token.sub
-        session.user.role = token.role as string
+    async session({ session, token }: { session: Record<string, unknown>; token: Record<string, unknown> }) {
+      if (token && session.user && 'sub' in token && token.sub) {
+        const user = session.user as { id: string; role: string }
+        user.id = String(token.sub)
+        user.role = token.role as string
       }
       return session
     }

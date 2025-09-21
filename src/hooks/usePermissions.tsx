@@ -1,14 +1,14 @@
 'use client'
 
 import { useSession } from 'next-auth/react'
-import { UserRole, hasPermission, canCreate, canUpdate, canDelete, getUserRole } from '@/lib/permissions'
+import { hasPermission, canCreate, canUpdate, canDelete, getUserRole, UserSession } from '@/lib/permissions'
 
 /**
  * Custom hook for role-based permission checking
  */
 export function usePermissions() {
   const { data: session } = useSession()
-  const userRole = getUserRole(session)
+  const userRole = getUserRole(session as UserSession | null)
 
   return {
     userRole,
@@ -78,7 +78,7 @@ export function AccessDenied({ resource }: { resource: string }) {
             Access Denied
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            You don't have permission to access {resource}. Your current role is: <span className="font-semibold">{userRole}</span>
+            You don&apos;t have permission to access {resource}. Your current role is: <span className="font-semibold">{userRole}</span>
           </p>
           <p className="mt-2 text-xs text-gray-500">
             Please contact an administrator if you believe this is an error.

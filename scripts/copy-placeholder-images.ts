@@ -1,5 +1,5 @@
 import { copyFileSync, existsSync } from 'fs'
-import { join } from 'path'
+// import { join as _join } from 'path' // Unused import removed
 
 // List of missing images that need to be created
 const missingImages = [

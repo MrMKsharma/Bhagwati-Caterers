@@ -1,15 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { 
   Plus, 
   Search, 
   Edit, 
   Trash2, 
-  Users, 
-  Shield,
-  Eye,
-  EyeOff,
   Mail,
   User
 } from 'lucide-react'
@@ -48,22 +44,13 @@ export default function UsersManagementPage() {
   // Check if user can access this page
   const canAccess = hasPermission('users', 'read')
 
-  // Fetch users effect
-  useEffect(() => {
-    if (canAccess) {
-      fetchUsers()
-    } else {
-      setLoading(false)
-    }
-  }, [canAccess])
-
   const roles = [
     { value: 'admin', label: 'Administrator', description: 'Full system access' },
     { value: 'manager', label: 'Manager', description: 'Manage content and inquiries' },
     { value: 'staff', label: 'Staff', description: 'View reports and basic operations' }
   ]
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       const response = await fetch('/api/admin/users')
       if (!response.ok) throw new Error('Failed to fetch users')
@@ -76,7 +63,16 @@ export default function UsersManagementPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
+
+  // Fetch users effect
+  useEffect(() => {
+    if (canAccess) {
+      fetchUsers()
+    } else {
+      setLoading(false)
+    }
+  }, [canAccess, fetchUsers])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -99,7 +95,7 @@ export default function UsersManagementPage() {
     }
 
     try {
-      const userData: any = {
+      const userData: { name: string; email: string; role: string; password?: string } = {
         name: formData.name,
         email: formData.email,
         role: formData.role
@@ -246,7 +242,7 @@ export default function UsersManagementPage() {
           <div>
             <select
               value={roleFilter}
-              onChange={(e) => setRoleFilter(e.target.value as any)}
+              onChange={(e) => setRoleFilter(e.target.value as 'all' | 'admin' | 'manager' | 'staff')}
               className="rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500"
             >
               <option value="all">All Roles</option>

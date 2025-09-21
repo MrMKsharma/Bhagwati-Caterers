@@ -1,12 +1,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Filter, Calendar, Camera, Heart, Eye } from 'lucide-react'
+import { } from 'lucide-react'
+import Image from 'next/image'
 import SEOHead from '@/components/seo/SEOHead'
 
 export default function GalleryPage() {
-  const [images, setImages] = useState<any[]>([])
-  const [filteredImages, setFilteredImages] = useState<any[]>([])
+  const [images, setImages] = useState<Array<{ id: string; src: string; alt: string; category: string; title: string }>>([])
+  const [filteredImages, setFilteredImages] = useState<Array<{ id: string; src: string; alt: string; category: string; title: string }>>([])
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [loading, setLoading] = useState(true)
 
@@ -16,37 +17,37 @@ export default function GalleryPage() {
       {
         id: '1',
         title: 'Wedding Ceremony',
-        imageUrl: '/images/gallery/wedding-ceremony.jpg',
+        src: '/images/gallery/wedding-ceremony.jpg',
+        alt: 'Wedding Ceremony',
         category: 'weddings',
-        createdAt: '2023-09-15T12:00:00Z',
       },
       {
         id: '2',
         title: 'Corporate Event',
-        imageUrl: '/images/gallery/corporate-event.jpg',
+        src: '/images/gallery/corporate-event.jpg',
+        alt: 'Corporate Event',
         category: 'corporate',
-        createdAt: '2023-08-20T14:30:00Z',
       },
       {
         id: '3',
         title: 'Birthday Party',
-        imageUrl: '/images/gallery/birthday-party.jpg',
+        src: '/images/gallery/birthday-party.jpg',
+        alt: 'Birthday Party',
         category: 'birthdays',
-        createdAt: '2023-07-10T18:45:00Z',
       },
       {
         id: '4',
         title: 'Food Presentation',
-        imageUrl: '/images/gallery/food-presentation.jpg',
+        src: '/images/gallery/food-presentation.jpg',
+        alt: 'Food Presentation',
         category: 'food',
-        createdAt: '2023-06-25T11:15:00Z',
       },
       {
         id: '5',
         title: 'Event Setup',
-        imageUrl: '/images/gallery/event-setup.jpg',
+        src: '/images/gallery/event-setup.jpg',
+        alt: 'Event Setup',
         category: 'events',
-        createdAt: '2023-05-30T13:45:00Z',
       },
     ]
     
@@ -107,10 +108,11 @@ export default function GalleryPage() {
             filteredImages.map(image => (
               <div key={image.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 group cursor-pointer transform hover:-translate-y-1">
                 <div className="h-64 bg-gray-100 relative overflow-hidden">
-                  <img
-                    src={image.imageUrl}
-                    alt={image.title || 'Gallery Image'}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  <Image
+                    src={image.src}
+                    alt={image.alt}
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement
                       target.style.display = 'none'
@@ -133,7 +135,7 @@ export default function GalleryPage() {
                     {image.title || 'Gallery Image'}
                   </h3>
                   <p className="text-gray-600 text-sm capitalize">
-                    {image.category} • {new Date(image.createdAt).toLocaleDateString()}
+                    {image.category}
                   </p>
                 </div>
               </div>

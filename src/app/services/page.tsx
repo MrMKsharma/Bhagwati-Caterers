@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Calendar, Users, Utensils, Gift, Star, Leaf, ChefHat, PartyPopper, Building, Heart, Sparkles, Crown, Award, CheckCircle } from 'lucide-react'
+import { Calendar, Users, Utensils, Gift, Leaf, Building, Heart, Sparkles, Crown, Award, CheckCircle } from 'lucide-react'
 import SEOHead from '@/components/seo/SEOHead'
 
 export default function ServicesPage() {
@@ -154,7 +154,6 @@ export default function ServicesPage() {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service, index) => {
-              const IconComponent = service.icon
               return (
                 <div 
                   key={index} 
@@ -260,7 +259,7 @@ export default function ServicesPage() {
             मोफत सल्लामसलतीसाठी आज आमच्याशी संपर्क साधा आणि आम्ही आपल्या कार्यक्रमाला कसे असाधारण बनवू शकतो याची चर्चा करूया.
           </p>
           <p className="text-sm text-white/70 mb-8 max-w-3xl mx-auto">
-            Contact us today for a complimentary consultation and let's discuss how we can make your event extraordinary.
+            Contact us today for a complimentary consultation and let&apos;s discuss how we can make your event extraordinary.
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <Link 

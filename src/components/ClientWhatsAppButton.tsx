@@ -6,7 +6,7 @@ import WhatsAppButton from '@/components/WhatsAppButton'
 const ClientWhatsAppButton = () => {
   const pathname = usePathname()
 
-  // Don't show WhatsApp button on admin pages
+  // Don&apos;t show WhatsApp button on admin pages
   if (pathname.startsWith('/admin')) {
     return null
   }

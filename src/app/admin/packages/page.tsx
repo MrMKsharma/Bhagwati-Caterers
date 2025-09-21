@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Plus, Edit2, Trash2, Eye, EyeOff, Package as PackageIcon } from 'lucide-react'
+import Image from 'next/image'
 
 interface Package {
   id: string
@@ -35,11 +36,7 @@ export default function AdminPackagesPage() {
     imageUrl: ''
   })
 
-  useEffect(() => {
-    fetchPackages()
-  }, [])
-
-  const fetchPackages = async () => {
+  const fetchPackages = useCallback(async () => {
     try {
       const response = await fetch('/api/admin/packages')
       if (!response.ok) throw new Error('Failed to fetch packages')
@@ -50,7 +47,11 @@ export default function AdminPackagesPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    fetchPackages()
+  }, [fetchPackages])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -383,10 +384,11 @@ export default function AdminPackagesPage() {
                 <div key={pkg.id} className="border border-gray-200 rounded-lg overflow-hidden">
                   <div className="h-48 bg-gray-100 relative">
                     {pkg.imageUrl ? (
-                      <img
+                      <Image
                         src={pkg.imageUrl}
                         alt={pkg.name}
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement
                           target.style.display = 'none'

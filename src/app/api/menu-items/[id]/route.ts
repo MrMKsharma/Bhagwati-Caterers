@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
-import { getServerSession } from 'next-auth'
+import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/auth'
+import type { CustomSession } from '@/types/api'
 
 // GET - Fetch single menu item (public)
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -38,7 +39,7 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getServerSession(authOptions) as CustomSession | null
     
     if (!session?.user) {
       return NextResponse.json(
@@ -88,7 +89,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getServerSession(authOptions) as CustomSession | null
     
     if (!session?.user) {
       return NextResponse.json(

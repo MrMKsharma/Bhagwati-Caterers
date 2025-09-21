@@ -1,15 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { 
   TrendingUp, 
   Users, 
   MessageSquare, 
-  Calendar,
   Star,
-  Image,
+  Image as ImageIcon,
   ChefHat,
-  DollarSign,
   BarChart3,
   PieChart,
   Activity,
@@ -51,16 +49,7 @@ export default function AnalyticsPage() {
   // Check if user can access analytics
   const canAccess = hasPermission('analytics', 'read')
 
-  useEffect(() => {
-    // Only fetch data if user has permission
-    if (canAccess) {
-      fetchAnalytics()
-    } else {
-      setLoading(false)
-    }
-  }, [canAccess])
-
-  const fetchAnalytics = async () => {
+  const fetchAnalytics = useCallback(async () => {
     try {
       const response = await fetch('/api/admin/analytics')
       if (!response.ok) throw new Error('Failed to fetch analytics')
@@ -71,7 +60,16 @@ export default function AnalyticsPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    // Only fetch data if user has permission
+    if (canAccess) {
+      fetchAnalytics()
+    } else {
+      setLoading(false)
+    }
+  }, [canAccess, fetchAnalytics])
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -200,7 +198,7 @@ export default function AnalyticsPage() {
 
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center">
-            <Image className="h-6 w-6 text-pink-600 mr-3" />
+            <ImageIcon className="h-6 w-6 text-pink-600 mr-3" />
             <div>
               <p className="text-sm font-medium text-gray-500">Gallery Images</p>
               <p className="text-xl font-semibold text-gray-900">{data.overview.totalGalleryImages}</p>
@@ -276,7 +274,7 @@ export default function AnalyticsPage() {
           Monthly Inquiry Trends
         </h3>
         <div className="grid grid-cols-6 gap-4">
-          {data.monthlyTrends.map((month, index) => {
+          {data.monthlyTrends.map((month) => {
             const maxCount = Math.max(...data.monthlyTrends.map(m => m.count))
             const height = maxCount > 0 ? (month.count / maxCount) * 100 : 0
             

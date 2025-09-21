@@ -10,12 +10,10 @@ import {
   Package, 
   MessageSquare, 
   Image, 
-  Menu as MenuIcon, 
   LogOut,
   ChefHat,
   Star,
-  BarChart3,
-  FileText
+  BarChart3
 } from 'lucide-react'
 import { usePermissions } from '@/hooks/usePermissions'
 import { NavItem, getFilteredNavItems, ROLE_DESCRIPTIONS } from '@/lib/permissions'

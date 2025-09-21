@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
+import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { sendEmail, emailTemplates } from '@/lib/email'
@@ -33,16 +33,28 @@ export async function POST(request: Request) {
 
     for (const inquiry of inquiries) {
       try {
-        let emailData = {}
+        let emailData: {
+          name: string;
+          eventType?: string;
+          eventDate?: string;
+          customerName?: string;
+          guestCount?: number | null;
+          originalMessage?: string;
+          urgent?: boolean;
+          final?: boolean;
+        } = {
+          name: inquiry.name
+        }
         let subject = ''
 
         switch (followupType) {
           case 'gentle_reminder':
             subject = `Following up on your catering inquiry - ${inquiry.eventType || 'Event'}`
             emailData = {
+              name: inquiry.name,
               customerName: inquiry.name,
               eventType: inquiry.eventType || 'your event',
-              eventDate: inquiry.eventDate ? new Date(inquiry.eventDate).toLocaleDateString() : null,
+              eventDate: inquiry.eventDate ? new Date(inquiry.eventDate).toLocaleDateString() : undefined,
               guestCount: inquiry.guestCount,
               originalMessage: inquiry.message
             }
@@ -51,9 +63,10 @@ export async function POST(request: Request) {
           case 'urgent_reminder':
             subject = `Important: Your catering inquiry needs attention - ${inquiry.eventType || 'Event'}`
             emailData = {
+              name: inquiry.name,
               customerName: inquiry.name,
               eventType: inquiry.eventType || 'your event',
-              eventDate: inquiry.eventDate ? new Date(inquiry.eventDate).toLocaleDateString() : null,
+              eventDate: inquiry.eventDate ? new Date(inquiry.eventDate).toLocaleDateString() : undefined,
               guestCount: inquiry.guestCount,
               urgent: true
             }
@@ -62,9 +75,10 @@ export async function POST(request: Request) {
           case 'final_reminder':
             subject = `Final reminder: Your catering inquiry - ${inquiry.eventType || 'Event'}`
             emailData = {
+              name: inquiry.name,
               customerName: inquiry.name,
               eventType: inquiry.eventType || 'your event',
-              eventDate: inquiry.eventDate ? new Date(inquiry.eventDate).toLocaleDateString() : null,
+              eventDate: inquiry.eventDate ? new Date(inquiry.eventDate).toLocaleDateString() : undefined,
               guestCount: inquiry.guestCount,
               final: true
             }
@@ -141,9 +155,9 @@ export async function GET(request: Request) {
     // Categorize by age
     const now = new Date()
     const categorized: {
-      gentle: any[],
-      urgent: any[],
-      final: any[]
+      gentle: Array<{ id: string; name: string; email: string; eventType: string; createdAt: Date; daysSinceInquiry: number }>,
+      urgent: Array<{ id: string; name: string; email: string; eventType: string; createdAt: Date; daysSinceInquiry: number }>,
+      final: Array<{ id: string; name: string; email: string; eventType: string; createdAt: Date; daysSinceInquiry: number }>
     } = {
       gentle: [], // 3-7 days old
       urgent: [], // 7-14 days old  
@@ -153,12 +167,21 @@ export async function GET(request: Request) {
     pendingInquiries.forEach(inquiry => {
       const daysSinceCreated = Math.floor((now.getTime() - new Date(inquiry.createdAt).getTime()) / (1000 * 60 * 60 * 24))
       
+      const inquiryData = {
+        id: inquiry.id,
+        name: inquiry.name,
+        email: inquiry.email,
+        eventType: inquiry.eventType || 'Event',
+        createdAt: inquiry.createdAt,
+        daysSinceInquiry: daysSinceCreated
+      }
+      
       if (daysSinceCreated >= 14) {
-        categorized.final.push(inquiry)
+        categorized.final.push(inquiryData)
       } else if (daysSinceCreated >= 7) {
-        categorized.urgent.push(inquiry)
+        categorized.urgent.push(inquiryData)
       } else {
-        categorized.gentle.push(inquiry)
+        categorized.gentle.push(inquiryData)
       }
     })
 

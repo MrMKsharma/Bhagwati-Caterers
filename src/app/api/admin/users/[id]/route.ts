@@ -63,7 +63,7 @@ export async function PATCH(
     const { session, userRole } = permissionCheck
 
     // Only admins can update other users, users can update themselves
-    const currentUser = session!.user as any
+    const currentUser = session!.user as { id: string; email: string; role: string }
     if (userRole !== 'admin' && currentUser.id !== id) {
       return NextResponse.json(
         { error: 'Unauthorized - Insufficient permissions' },
@@ -87,7 +87,7 @@ export async function PATCH(
     }
 
     // Prepare update data
-    const updateData: any = {}
+    const updateData: { name?: string; email?: string; role?: string; password?: string } = {}
     
     if (name !== undefined) updateData.name = name
     if (email !== undefined) {

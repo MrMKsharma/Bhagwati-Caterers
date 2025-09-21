@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
-import { Search, Filter, ChefHat, Leaf, Flame, Clock, Users, Heart, Share2, Utensils } from 'lucide-react'
+import { } from 'lucide-react'
+import Image from 'next/image'
 import SEOHead from '@/components/seo/SEOHead'
 
 interface MenuItem {
@@ -25,23 +26,23 @@ interface ApiResponse {
   error?: string
 }
 
+// Enhanced categories based on the database schema
+const categories = [
+  { id: 'all', name: 'All Items' },
+  { id: 'appetizer', name: 'Appetizers' },
+  { id: 'main', name: 'Main Course' },
+  { id: 'dessert', name: 'Desserts' },
+  { id: 'beverage', name: 'Beverages' },
+  { id: 'bread', name: 'Bread' },
+  { id: 'rice', name: 'Rice' },
+  { id: 'dal', name: 'Dal' }
+]
+
 export default function MenuPage() {
   const [activeCategory, setActiveCategory] = useState('all')
   const [menuItems, setMenuItems] = useState<MenuItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-
-  // Enhanced categories based on the database schema
-  const categories = [
-    { id: 'all', name: 'All Items' },
-    { id: 'appetizer', name: 'Appetizers' },
-    { id: 'main', name: 'Main Course' },
-    { id: 'dessert', name: 'Desserts' },
-    { id: 'beverage', name: 'Beverages' },
-    { id: 'bread', name: 'Bread' },
-    { id: 'rice', name: 'Rice' },
-    { id: 'dal', name: 'Dal' }
-  ]
 
   useEffect(() => {
     const fetchMenuItems = async () => {
@@ -102,7 +103,7 @@ export default function MenuPage() {
     categories.filter(category => 
       category.id === 'all' || menuItems.some(item => item.category === category.id)
     ),
-    [categories, menuItems]
+    [menuItems]
   )
 
   if (loading) {
@@ -216,10 +217,11 @@ export default function MenuPage() {
               <div key={item.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                 <div className="h-48 bg-gradient-to-r from-green-200 to-green-300 flex items-center justify-center">
                   {item.image ? (
-                    <img 
+                    <Image 
                       src={item.image} 
                       alt={item.name} 
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
                       loading="lazy"
                     />
                   ) : (

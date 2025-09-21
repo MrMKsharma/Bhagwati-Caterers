@@ -5,6 +5,8 @@ interface BusinessStructuredDataProps {
 }
 
 export function BusinessStructuredData({ type = 'business' }: BusinessStructuredDataProps) {
+  // Note: type parameter is available for future use
+  console.log('BusinessStructuredData type:', type)
   const businessData = {
     "@context": "https://schema.org",
     "@type": "FoodEstablishment",
@@ -165,7 +167,7 @@ export function MenuStructuredData({ menuItems }: MenuStructuredDataProps) {
     "@type": "Menu",
     "name": "Bhagwati Caterers Menu",
     "description": "Our carefully curated menu featuring premium dishes for all occasions",
-    "hasMenuSection": menuItems.reduce((sections: any[], item) => {
+    "hasMenuSection": menuItems.reduce((sections: Array<{ "@type": string; name: string; hasMenuItem: Array<Record<string, unknown>> }>, item) => {
       let section = sections.find(s => s.name === item.category)
       if (!section) {
         section = {

@@ -118,7 +118,7 @@ interface ServicePageSEOProps extends Omit<SEOProps, 'type'> {
 
 export function ServicePageSEO({ 
   serviceName, 
-  servicePrice, 
+  // servicePrice, // Not currently used in this component 
   ...props 
 }: ServicePageSEOProps) {
   const title = `${serviceName} - Bhagwati Caterers`

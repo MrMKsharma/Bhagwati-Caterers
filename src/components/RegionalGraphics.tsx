@@ -37,14 +37,13 @@ const RegionalGraphics = () => {
         <div
           key={`leaf-${index}`}
           className={`absolute text-green-300 opacity-30 ${
-            index % 2 === 0 ? 'text-2xl' : 'text-3xl'
+            index % 2 === 0 ? 'text-2xl animate-float1' : 'text-3xl animate-float2'
           }`}
           style={{
             top: `${20 + index * 15}%`,
             left: `${10 + index * 15}%`,
             animationDelay: `${index * 1}s`
           }}
-          className={index % 2 === 0 ? 'animate-float1' : 'animate-float2'}
         >
           ♣
         </div>

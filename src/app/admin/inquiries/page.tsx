@@ -1,11 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { 
   Eye, 
   Trash2, 
   Mail, 
-  Phone, 
   Calendar, 
   Users as UsersIcon,
   Filter,
@@ -33,11 +32,7 @@ export default function InquiriesPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedInquiry, setSelectedInquiry] = useState<Inquiry | null>(null)
 
-  useEffect(() => {
-    fetchInquiries()
-  }, [])
-
-  const fetchInquiries = async () => {
+  const fetchInquiries = useCallback(async () => {
     try {
       const response = await fetch('/api/inquiries')
       if (response.ok) {
@@ -49,7 +44,11 @@ export default function InquiriesPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    fetchInquiries()
+  }, [fetchInquiries])
 
   const updateInquiryStatus = async (id: string, status: string) => {
     try {

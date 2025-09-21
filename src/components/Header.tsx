@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { useState } from 'react'
-import { Menu, X, Phone, Mail, Leaf, Sparkles } from 'lucide-react'
+import { Menu, X, Phone, Mail, Sparkles } from 'lucide-react'
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)

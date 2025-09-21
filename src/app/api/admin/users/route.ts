@@ -2,13 +2,14 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 import bcrypt from 'bcryptjs'
 import { checkPermission } from '@/lib/auth-helpers'
+import { CreateUserRequest, UserResponse, ApiErrorResponse } from '@/types/api'
 
 // GET - Get all users
 export async function GET() {
   const permissionCheck = await checkPermission(new Request('http://localhost'), 'users', 'read')
   
   if (!permissionCheck.authorized) {
-    return permissionCheck.response
+    return permissionCheck.response!
   }
 
   try {
@@ -26,7 +27,7 @@ export async function GET() {
     })
 
     return NextResponse.json({ users })
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error fetching users:', error)
     return NextResponse.json(
       { error: 'Failed to fetch users' },
@@ -36,15 +37,15 @@ export async function GET() {
 }
 
 // POST - Create new user
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<NextResponse<{ user: UserResponse } | ApiErrorResponse>> {
   const permissionCheck = await checkPermission(request, 'users', 'create')
   
   if (!permissionCheck.authorized) {
-    return permissionCheck.response
+    return permissionCheck.response! as NextResponse<ApiErrorResponse>
   }
 
   try {
-    const body = await request.json()
+    const body: CreateUserRequest = await request.json()
     const { name, email, password, role } = body
 
     if (!name || !email || !password || !role) {
@@ -89,7 +90,7 @@ export async function POST(request: Request) {
     })
 
     return NextResponse.json({ user }, { status: 201 })
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error creating user:', error)
     return NextResponse.json(
       { error: 'Failed to create user' },

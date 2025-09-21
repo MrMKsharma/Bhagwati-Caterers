@@ -2,22 +2,14 @@
 
 import { useState, useEffect } from 'react'
 import { Download, X, Smartphone } from 'lucide-react'
-
-interface BeforeInstallPromptEvent extends Event {
-  readonly platforms: string[]
-  readonly userChoice: Promise<{
-    outcome: 'accepted' | 'dismissed'
-    platform: string
-  }>
-  prompt(): Promise<void>
-}
+import { BeforeInstallPromptEvent } from '@/types/api'
 
 export default function InstallPrompt() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
   const [showInstallPrompt, setShowInstallPrompt] = useState(false)
   const [isInstalled, setIsInstalled] = useState<boolean | null>(null) // Start with null
   const [isIOS, setIsIOS] = useState<boolean | null>(null) // Start with null
-  const [isStandalone, setIsStandalone] = useState(false)
+  const [, setIsStandalone] = useState(false)
   const [hasMounted, setHasMounted] = useState(false)
 
   useEffect(() => {
@@ -29,9 +21,10 @@ export default function InstallPrompt() {
     // Check if app is already installed
     const checkIfInstalled = () => {
       const standalone = window.matchMedia('(display-mode: standalone)').matches
-      const isIOSStandalone = (window.navigator as any).standalone === true
+      const isIOSStandalone = (window.navigator as Navigator & { standalone?: boolean }).standalone === true
       setIsStandalone(standalone || isIOSStandalone)
       setIsInstalled(standalone || isIOSStandalone)
+      return standalone || isIOSStandalone
     }
 
     // Check if device is iOS
@@ -41,7 +34,7 @@ export default function InstallPrompt() {
       setIsIOS(isIOSDevice)
     }
 
-    checkIfInstalled()
+    const currentlyInstalled = checkIfInstalled()
     checkIfIOS()
 
     // Listen for beforeinstallprompt event
@@ -51,7 +44,7 @@ export default function InstallPrompt() {
       
       // Show install prompt after a delay (not immediately)
       setTimeout(() => {
-        if (!isInstalled) {
+        if (!currentlyInstalled) {
           setShowInstallPrompt(true)
         }
       }, 10000) // Show after 10 seconds
@@ -72,7 +65,7 @@ export default function InstallPrompt() {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
       window.removeEventListener('appinstalled', handleAppInstalled)
     }
-  }, [isInstalled])
+  }, [])
 
   const handleInstallClick = async () => {
     if (!deferredPrompt) return
@@ -96,18 +89,18 @@ export default function InstallPrompt() {
 
   const handleDismiss = () => {
     setShowInstallPrompt(false)
-    // Don't show again for this session
+    // Don&apos;t show again for this session
     if (typeof window !== 'undefined') {
       sessionStorage.setItem('installPromptDismissed', 'true')
     }
   }
 
-  // Don't render until mounted to prevent hydration mismatch
+  // Don&apos;t render until mounted to prevent hydration mismatch
   if (!hasMounted) {
     return null
   }
 
-  // Don't show if still loading, already installed, or dismissed this session
+  // Don&apos;t show if still loading, already installed, or dismissed this session
   if (isInstalled === null || isIOS === null || isInstalled || (typeof window !== 'undefined' && sessionStorage.getItem('installPromptDismissed'))) {
     return null
   }
@@ -134,8 +127,8 @@ export default function InstallPrompt() {
         </p>
         <div className="text-sm text-gray-700 space-y-2">
           <p>1. Tap the <strong>Share</strong> button ⬆️</p>
-          <p>2. Scroll down and tap <strong>"Add to Home Screen"</strong></p>
-          <p>3. Tap <strong>"Add"</strong> to install</p>
+          <p>2. Scroll down and tap <strong>&quot;Add to Home Screen&quot;</strong></p>
+          <p>3. Tap <strong>&quot;Add&quot;</strong> to install</p>
         </div>
       </div>
     )

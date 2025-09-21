@@ -1,9 +1,16 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function MobileOptimizations() {
+  const [hasMounted, setHasMounted] = useState(false)
+
   useEffect(() => {
+    setHasMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!hasMounted) return
     // Disable zoom on double tap for iOS
     let lastTouchEnd = 0
     const handleTouchEnd = (e: TouchEvent) => {
@@ -180,9 +187,11 @@ export default function MobileOptimizations() {
       document.removeEventListener('touchstart', handleTouchStart)
       document.removeEventListener('touchmove', handleTouchMove)
       window.removeEventListener('resize', handleResize)
-      document.head.removeChild(style)
+      if (document.head.contains(style)) {
+        document.head.removeChild(style)
+      }
     }
-  }, [])
+  }, [hasMounted])
 
-  return null // This component doesn't render anything
+  return null // This component doesn&apos;t render anything
 }

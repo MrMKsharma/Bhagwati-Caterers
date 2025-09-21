@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
-import { getServerSession } from 'next-auth'
+import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/auth'
+import type { CustomSession } from '@/types/api'
 
 // GET - Fetch all menu items (admin only)
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getServerSession(authOptions) as CustomSession | null
     
     if (!session?.user) {
       return NextResponse.json(
@@ -21,7 +22,7 @@ export async function GET(request: NextRequest) {
     const available = searchParams.get('available')
     const featured = searchParams.get('featured')
 
-    const where: any = {}
+    const where: Record<string, unknown> = {}
     
     if (category) where.category = category
     if (subcategory) where.subcategory = subcategory
@@ -50,7 +51,7 @@ export async function GET(request: NextRequest) {
 // POST - Create new menu item (admin only)
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getServerSession(authOptions) as CustomSession | null
     
     if (!session?.user) {
       return NextResponse.json(

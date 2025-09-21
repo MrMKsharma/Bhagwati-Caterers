@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
+// import { ApiErrorResponse } from '@/types/api'
 
 export async function GET() {
   try {
@@ -29,17 +30,30 @@ export async function GET() {
     })
 
     // Transform the data for public consumption
-    const transformedItems = menuItems.map((item) => ({
+    const transformedItems = menuItems.map((item): {
+      id: string;
+      name: string;
+      category: string;
+      subcategory?: string;
+      description?: string;
+      dietType?: string;
+      spiceLevel?: number;
+      ingredients: string[];
+      allergens: string[];
+      image?: string;
+      isVeg: boolean;
+      isFeatured: boolean;
+    } => ({
       id: item.id,
       name: item.name,
       category: item.category,
-      subcategory: item.subcategory,
-      description: item.description,
-      dietType: item.dietType,
-      spiceLevel: item.spiceLevel,
+      subcategory: item.subcategory || undefined,
+      description: item.description || undefined,
+      dietType: item.dietType || undefined,
+      spiceLevel: typeof item.spiceLevel === 'number' ? item.spiceLevel : undefined,
       ingredients: item.ingredients ? JSON.parse(item.ingredients) : [],
       allergens: item.allergens ? JSON.parse(item.allergens) : [],
-      image: item.imageUrl,
+      image: item.imageUrl || undefined,
       isVeg: true, // All items are vegetarian for Bhagwati Caterers
       isFeatured: item.isFeatured
     }))
@@ -48,7 +62,7 @@ export async function GET() {
       success: true, 
       data: transformedItems 
     })
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error fetching menu items:', error)
     
     // Return error instead of fallback data

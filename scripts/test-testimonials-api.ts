@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server'
+// import { NextRequest as _NextRequest } from 'next/server' // Unused import
 import { GET } from '../src/app/api/admin/testimonials/route'
 
 async function testApi() {

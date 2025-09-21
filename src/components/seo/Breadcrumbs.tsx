@@ -22,7 +22,7 @@ export default function Breadcrumbs({ items, className = '' }: BreadcrumbsProps)
   const generateBreadcrumbs = (): BreadcrumbItem[] => {
     if (items) return items
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://bhagwati-caterers.com'
+    // const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://bhagwati-caterers.com' // Not currently used
     const pathSegments = pathname.split('/').filter(segment => segment !== '')
     
     const breadcrumbs: BreadcrumbItem[] = [
@@ -45,11 +45,11 @@ export default function Breadcrumbs({ items, className = '' }: BreadcrumbsProps)
     }
 
     let currentPath = ''
-    pathSegments.forEach((segment, index) => {
+    pathSegments.forEach((segment) => {
       currentPath += `/${segment}`
       const name = pathNameMap[segment] || segment.charAt(0).toUpperCase() + segment.slice(1)
       
-      // Don't add admin paths to public breadcrumbs
+      // Don&apos;t add admin paths to public breadcrumbs
       if (!pathname.startsWith('/admin') || pathname.startsWith('/admin')) {
         breadcrumbs.push({
           name,
@@ -63,7 +63,7 @@ export default function Breadcrumbs({ items, className = '' }: BreadcrumbsProps)
 
   const breadcrumbItems = generateBreadcrumbs()
   
-  // Don't show breadcrumbs on home page or if only home
+  // Don&apos;t show breadcrumbs on home page or if only home
   if (pathname === '/' || breadcrumbItems.length <= 1) {
     return null
   }

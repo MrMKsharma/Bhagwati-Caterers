@@ -132,17 +132,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <Providers>
-          <ServiceWorkerRegistration />
-          <MobileOptimizations />
           <ClientOnlyWrapper>
+            <ServiceWorkerRegistration />
+            <MobileOptimizations />
             <OfflineIndicator />
             <InstallPrompt />
           </ClientOnlyWrapper>
           <div className="flex flex-col min-h-screen relative">
-            <RegionalGraphics />
+            <ClientOnlyWrapper>
+              <RegionalGraphics />
+            </ClientOnlyWrapper>
             {/* Main site navigation - will be hidden on admin pages via Client Components */}
             <ClientHeader />
             <main className="flex-grow relative z-10">

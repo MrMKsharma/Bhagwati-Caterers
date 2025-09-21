@@ -41,10 +41,10 @@ export default function OfflinePage() {
           <div className="text-center">
             <WifiOff className="mx-auto h-16 w-16 text-gray-400 mb-4" />
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
-              You're Offline
+              You&apos;re Offline
             </h1>
             <p className="text-gray-600 mb-6">
-              It looks like you've lost your internet connection. Don't worry, you can still browse some of our content that's been cached.
+              It looks like you&apos;ve lost your internet connection. Don&apos;t worry, you can still browse some of our content that&apos;s been cached.
             </p>
 
             <div className="space-y-4">
@@ -88,7 +88,7 @@ export default function OfflinePage() {
 
             <div className="mt-6 text-xs text-gray-500 text-center">
               <p>
-                Your form submissions will be saved and sent automatically when you're back online.
+                Your form submissions will be saved and sent automatically when you&apos;re back online.
               </p>
             </div>
           </div>

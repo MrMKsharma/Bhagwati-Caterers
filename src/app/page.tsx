@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { ChefHat, Users, Calendar, Award, Star, ArrowRight } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { BusinessStructuredData, ServiceStructuredData, ReviewStructuredData } from '@/components/seo/StructuredData'
 
 
@@ -19,11 +19,7 @@ export default function Home() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([])
   const [testimonialsLoading, setTestimonialsLoading] = useState(true)
 
-  useEffect(() => {
-    fetchTestimonials()
-  }, [])
-
-  const fetchTestimonials = async () => {
+  const fetchTestimonials = useCallback(async () => {
     try {
       const response = await fetch('/api/testimonials')
       if (response.ok) {
@@ -35,7 +31,12 @@ export default function Home() {
     } finally {
       setTestimonialsLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    fetchTestimonials()
+  }, [fetchTestimonials])
+
   return (
     <div>
       {/* SEO Structured Data */}

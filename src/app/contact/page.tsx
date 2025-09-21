@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { MapPin, Phone, Mail, Clock, MessageCircle, Calendar, Users, Send, Sparkles, Heart, Award, CheckCircle, Star } from 'lucide-react'
+import { MapPin, Phone, Mail, Clock, MessageCircle, Send, Sparkles, Heart, Award, CheckCircle, Star } from 'lucide-react'
 import SEOHead from '@/components/seo/SEOHead'
 
 export default function ContactPage() {
@@ -129,7 +129,7 @@ export default function ContactPage() {
               अविस्मरणीय आठवणी निर्माण करण्यासाठी तयार आहात? आपल्या कार्यक्रमाची चर्चा करूया आणि परिपूर्ण शाकाहारी केटरिंग अनुभव तयार करूया.
             </p>
             <p className="text-lg text-gray-500 mt-2">
-              Ready to create unforgettable memories? Let's discuss your event and craft the perfect vegetarian catering experience together.
+              Ready to create unforgettable memories? Let&apos;s discuss your event and craft the perfect vegetarian catering experience together.
             </p>
           </div>
 
@@ -174,7 +174,7 @@ export default function ContactPage() {
               <div className="relative z-10">
                 <h2 className="text-3xl font-bold text-gray-800 mb-2">आपल्या गरजा आम्हाला पाठवा</h2>
                 <p className="text-xl text-gray-700 mb-2">Send Us Your Requirements</p>
-                <p className="text-gray-600 mb-8">खालील फॉर्म भरा आणि आम्ही 2 तासांत आपल्याशी संपर्क साधू! • Fill out the form below and we'll get back to you within 2 hours!</p>
+                <p className="text-gray-600 mb-8">खालील फॉर्म भरा आणि आम्ही 2 तासांत आपल्याशी संपर्क साधू! • Fill out the form below and we&apos;ll get back to you within 2 hours!</p>
                 
                 {submitted ? (
                   <div className="text-center py-12">
@@ -184,7 +184,7 @@ export default function ContactPage() {
                     <h3 className="text-2xl font-bold text-green-600 mb-2">धन्यवाद!</h3>
                     <p className="text-lg text-gray-700 mb-2">Thank You!</p>
                     <p className="text-gray-600">आपला संदेश यशस्वीरित्या पाठवला गेला आहे. आम्ही लवकरच आपल्याशी संपर्क साधू!</p>
-                    <p className="text-gray-500 text-sm mt-2">Your message has been sent successfully. We'll contact you soon!</p>
+                    <p className="text-gray-500 text-sm mt-2">Your message has been sent successfully. We&apos;ll contact you soon!</p>
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-6">

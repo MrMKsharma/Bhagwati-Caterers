@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Plus, Edit2, Trash2, Eye, EyeOff, Image, Leaf, Star, Tag, Upload } from 'lucide-react'
+import { useState, useEffect, useCallback } from 'react'
+import { Plus, Edit2, Trash2, Eye, EyeOff, Image as ImageIcon, Leaf, Star } from 'lucide-react'
+import Image from 'next/image'
 
 interface GalleryImage {
   id: string
@@ -25,7 +26,7 @@ export default function AdminGalleryPage() {
   const [error, setError] = useState('')
   const [showAddForm, setShowAddForm] = useState(false)
   const [editingImage, setEditingImage] = useState<GalleryImage | null>(null)
-  const [filter, setFilter] = useState<'all' | 'food' | 'events' | 'setup'>('all')
+  const [filter, setFilter] = useState<'all' | 'food' | 'events' | 'setup' | 'festival' | 'corporate' | 'wedding'>('all')
 
   const [formData, setFormData] = useState({
     title: '',
@@ -39,11 +40,7 @@ export default function AdminGalleryPage() {
     sortOrder: ''
   })
 
-  useEffect(() => {
-    fetchImages()
-  }, [])
-
-  const fetchImages = async () => {
+  const fetchImages = useCallback(async () => {
     try {
       const response = await fetch('/api/admin/gallery')
       if (!response.ok) throw new Error('Failed to fetch images')
@@ -54,7 +51,11 @@ export default function AdminGalleryPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    fetchImages()
+  }, [fetchImages])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -161,7 +162,7 @@ export default function AdminGalleryPage() {
     setError('')
   }
 
-  const categories = [
+  const categories: Array<{ value: 'food' | 'events' | 'setup' | 'festival' | 'corporate' | 'wedding'; label: string }> = [
     { value: 'food', label: 'Vegetarian Food' },
     { value: 'events', label: 'Catering Events' },
     { value: 'setup', label: 'Setup & Decoration' },
@@ -227,7 +228,7 @@ export default function AdminGalleryPage() {
         {categories.map((cat) => (
           <button
             key={cat.value}
-            onClick={() => setFilter(cat.value as any)}
+            onClick={() => setFilter(cat.value)}
             className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
               filter === cat.value
                 ? 'bg-orange-600 text-white shadow-sm'
@@ -429,7 +430,7 @@ export default function AdminGalleryPage() {
       <div className="bg-white shadow rounded-lg">
         {filteredImages.length === 0 ? (
           <div className="text-center py-12">
-            <Image className="mx-auto h-12 w-12 text-gray-400" />
+            <ImageIcon className="mx-auto h-12 w-12 text-gray-400" />
             <h3 className="mt-2 text-sm font-medium text-gray-900">No images</h3>
             <p className="mt-1 text-sm text-gray-500">
               {filter === 'all' 
@@ -443,10 +444,11 @@ export default function AdminGalleryPage() {
             {filteredImages.map((image) => (
               <div key={image.id} className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
                 <div className="h-48 bg-gray-100 relative">
-                  <img
+                  <Image
                     src={image.imageUrl}
                     alt={image.title || 'Gallery image'}
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement
                       target.style.display = 'none'

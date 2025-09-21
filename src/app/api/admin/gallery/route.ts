@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
+import { getServerSession } from 'next-auth/next'
+import { ExtendedSession } from '@/lib/session-types'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
+import { CreateGalleryImageRequest, GalleryImageResponse, ApiErrorResponse } from '@/types/api'
 
 // GET - Fetch all gallery images for admin with filters
 export async function GET(request: NextRequest) {
@@ -17,7 +19,14 @@ export async function GET(request: NextRequest) {
     const active = searchParams.get('active')
     const featured = searchParams.get('featured')
 
-    const where: any = {}
+    interface WhereClause {
+      category?: string;
+      subcategory?: string;
+      isActive?: boolean;
+      isFeatured?: boolean;
+    }
+    
+    const where: WhereClause = {}
     
     if (category && category !== 'all') where.category = category
     if (subcategory) where.subcategory = subcategory
@@ -34,7 +43,7 @@ export async function GET(request: NextRequest) {
     })
 
     return NextResponse.json({ images })
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Gallery fetch error:', error)
     return NextResponse.json(
       { error: 'Failed to fetch gallery images' },
@@ -44,14 +53,14 @@ export async function GET(request: NextRequest) {
 }
 
 // POST - Create new gallery image with enhanced fields
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse<{ image: GalleryImageResponse } | ApiErrorResponse>> {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getServerSession(authOptions) as ExtendedSession | null
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const body = await request.json()
+    const body: CreateGalleryImageRequest = await request.json()
     const { 
       title, 
       description, 
@@ -87,15 +96,15 @@ export async function POST(request: NextRequest) {
         altText: altText || null,
         isActive: isActive !== undefined ? isActive : true,
         isFeatured: isFeatured || false,
-        sortOrder: sortOrder ? parseInt(sortOrder) : null,
+        sortOrder: sortOrder ? parseInt(String(sortOrder)) : null,
         uploadedBy: session.user?.email || null,
-        fileSize: fileSize ? parseInt(fileSize) : null,
+        fileSize: fileSize ? parseInt(String(fileSize)) : null,
         dimensions: dimensions || null
       }
     })
 
     return NextResponse.json({ image }, { status: 201 })
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Gallery creation error:', error)
     return NextResponse.json(
       { error: 'Failed to create gallery image' },

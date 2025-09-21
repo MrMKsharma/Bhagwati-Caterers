@@ -34,7 +34,7 @@ export default function AdminLogin() {
           router.push('/admin/dashboard')
         }
       }
-    } catch (err) {
+    } catch {
       setError('An error occurred. Please try again.')
     } finally {
       setIsLoading(false)

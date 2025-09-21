@@ -8,7 +8,7 @@ async function testPageLoadPerformance() {
   
   try {
     // Import the API route function
-    const { GET } = require('../src/app/api/menu-items/route')
+    const { GET } = await import('../src/app/api/menu-items/route')
     
     // Make 10 requests to simulate multiple users
     const requests = []

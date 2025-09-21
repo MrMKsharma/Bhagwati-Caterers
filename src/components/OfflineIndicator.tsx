@@ -58,12 +58,12 @@ export default function OfflineIndicator() {
     }
   }, [])
 
-  // Don't render until mounted to prevent hydration mismatch
+  // Don&apos;t render until mounted to prevent hydration mismatch
   if (!hasMounted) {
     return null
   }
 
-  // Don't show if online and no indicator needed, or if still loading
+  // Don&apos;t show if online and no indicator needed, or if still loading
   if (isOnline === null || (isOnline && !showIndicator && pendingCount === 0)) {
     return null
   }
@@ -73,7 +73,7 @@ export default function OfflineIndicator() {
       {!isOnline ? (
         <div className="bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg flex items-center space-x-2">
           <WifiOff className="h-4 w-4" />
-          <span className="text-sm font-medium">You're offline</span>
+          <span className="text-sm font-medium">You&apos;re offline</span>
           {pendingCount > 0 && (
             <div className="flex items-center space-x-1 bg-red-600 px-2 py-1 rounded text-xs">
               <Clock className="h-3 w-3" />

@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
-import { getServerSession } from 'next-auth'
+import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/auth'
+import { CreateGalleryImageRequest, GalleryImageResponse, ApiErrorResponse, CustomSession } from '@/types/api'
 
 // GET - Fetch gallery images (public with filters)
 export async function GET(request: NextRequest) {
@@ -13,7 +14,14 @@ export async function GET(request: NextRequest) {
     const active = searchParams.get('active')
     const limit = searchParams.get('limit')
 
-    const where: any = {}
+    interface WhereClause {
+      isActive?: boolean;
+      category?: string;
+      subcategory?: string;
+      isFeatured?: boolean;
+    }
+    
+    const where: WhereClause = {}
     
     // For public API, only show active images by default
     if (active !== 'false') {
@@ -24,7 +32,13 @@ export async function GET(request: NextRequest) {
     if (subcategory) where.subcategory = subcategory
     if (featured !== null) where.isFeatured = featured === 'true'
 
-    const queryOptions: any = {
+    interface QueryOptions {
+      where: WhereClause;
+      orderBy: Array<Record<string, string>>;
+      take?: number;
+    }
+    
+    const queryOptions: QueryOptions = {
       where,
       orderBy: [
         { isFeatured: 'desc' },
@@ -40,7 +54,7 @@ export async function GET(request: NextRequest) {
     const images = await prisma.galleryImage.findMany(queryOptions)
 
     return NextResponse.json({ images })
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Gallery fetch error:', error)
     return NextResponse.json(
       { error: 'Failed to fetch gallery images' },
@@ -50,9 +64,9 @@ export async function GET(request: NextRequest) {
 }
 
 // POST - Upload new gallery image (admin only)
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse<GalleryImageResponse | ApiErrorResponse>> {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getServerSession(authOptions) as CustomSession | null
     
     if (!session?.user) {
       return NextResponse.json(
@@ -61,7 +75,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const body = await request.json()
+    const body: CreateGalleryImageRequest = await request.json()
     
     const galleryImage = await prisma.galleryImage.create({
       data: {
@@ -75,15 +89,15 @@ export async function POST(request: NextRequest) {
         altText: body.altText,
         isActive: body.isActive !== undefined ? body.isActive : true,
         isFeatured: body.isFeatured || false,
-        sortOrder: body.sortOrder ? parseInt(body.sortOrder) : null,
+        sortOrder: body.sortOrder ? parseInt(String(body.sortOrder)) : null,
         uploadedBy: session.user.email,
-        fileSize: body.fileSize ? parseInt(body.fileSize) : null,
+        fileSize: body.fileSize ? parseInt(String(body.fileSize)) : null,
         dimensions: body.dimensions
       }
     })
 
     return NextResponse.json(galleryImage, { status: 201 })
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error uploading gallery image:', error)
     return NextResponse.json(
       { error: 'Failed to upload gallery image' },

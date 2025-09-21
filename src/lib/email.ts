@@ -16,7 +16,13 @@ export interface EmailData {
   from?: string
 }
 
-export async function sendEmail({ to, subject, html, from }: EmailData) {
+export interface EmailResult {
+  success: boolean;
+  messageId?: string;
+  error?: string;
+}
+
+export async function sendEmail({ to, subject, html, from }: EmailData): Promise<EmailResult> {
   try {
     const info = await transporter.sendMail({
       from: from || process.env.EMAIL_FROM,
@@ -27,15 +33,32 @@ export async function sendEmail({ to, subject, html, from }: EmailData) {
 
     console.log('Email sent successfully:', info.messageId)
     return { success: true, messageId: info.messageId }
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error sending email:', error)
     return { success: false, error: error instanceof Error ? error.message : 'Unknown error' }
   }
 }
 
+export interface EmailTemplateData {
+  name: string;
+  email: string;
+  phone?: string;
+  eventType?: string;
+  eventDate?: string;
+  guestCount?: string;
+  message?: string;
+  budget?: string;
+  venue?: string;
+}
+
+export interface EmailTemplate {
+  subject: string;
+  html: string;
+}
+
 // Email templates
 export const emailTemplates = {
-  inquiryReceived: (data: any) => ({
+  inquiryReceived: (data: EmailTemplateData): EmailTemplate => ({
     subject: `New Catering Inquiry from ${data.name}`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
@@ -105,7 +128,7 @@ export const emailTemplates = {
     `
   }),
 
-  inquiryConfirmation: (data: any) => ({
+  inquiryConfirmation: (data: Pick<EmailTemplateData, 'name' | 'eventType' | 'eventDate'> & { guestCount?: string | number | null }): EmailTemplate => ({
     subject: 'Thank you for your catering inquiry - Bhagwati Caterers',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">

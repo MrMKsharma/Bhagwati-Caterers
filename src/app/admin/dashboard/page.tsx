@@ -1,14 +1,11 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { 
-  Users, 
   MessageSquare, 
   Package, 
   TrendingUp,
-  Calendar,
-  Star,
-  DollarSign
+  Star
 } from 'lucide-react'
 
 interface DashboardStats {
@@ -16,7 +13,25 @@ interface DashboardStats {
   newInquiries: number
   totalMenuItems: number
   totalPackages: number
-  recentInquiries: Array<{
+  recentInquiries: RecentInquiry[]
+}
+
+interface RecentInquiry {
+  id: string
+  name: string
+  eventType: string
+  createdAt: string
+  status: string
+}
+
+interface AnalyticsApiResponse {
+  overview: {
+    totalInquiries: number
+    weeklyInquiries: number
+    totalMenuItems: number
+    totalPackages: number
+  }
+  recentActivity: Array<{
     id: string
     name: string
     eventType: string
@@ -36,11 +51,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
-  useEffect(() => {
-    fetchDashboardData()
-  }, [])
-
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = useCallback(async () => {
     try {
       setLoading(true)
       const response = await fetch('/api/admin/analytics')
@@ -49,7 +60,7 @@ export default function AdminDashboard() {
         throw new Error('Failed to fetch dashboard data')
       }
       
-      const data = await response.json()
+      const data: AnalyticsApiResponse = await response.json()
       
       // Transform the analytics data to match our dashboard stats structure
       setStats({
@@ -57,7 +68,7 @@ export default function AdminDashboard() {
         newInquiries: data.overview.weeklyInquiries, // Using weekly as "new"
         totalMenuItems: data.overview.totalMenuItems,
         totalPackages: data.overview.totalPackages, // Now using real package count
-        recentInquiries: data.recentActivity.map((activity: any) => ({
+        recentInquiries: data.recentActivity.map((activity) => ({
           id: activity.id,
           name: activity.name,
           eventType: activity.eventType,
@@ -71,7 +82,11 @@ export default function AdminDashboard() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    fetchDashboardData()
+  }, [fetchDashboardData])
 
   const statCards = [
     {

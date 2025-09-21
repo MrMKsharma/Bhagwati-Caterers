@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
-import { sendEmail, emailTemplates } from '@/lib/email'
+import { sendEmail, emailTemplates, EmailTemplateData } from '@/lib/email'
+import { CreateInquiryRequest, InquiryResponse, ApiErrorResponse } from '@/types/api'
 
 export async function GET() {
   try {
@@ -11,7 +12,7 @@ export async function GET() {
     })
 
     return NextResponse.json(inquiries)
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error fetching inquiries:', error)
     return NextResponse.json(
       { error: 'Failed to fetch inquiries' },
@@ -20,9 +21,9 @@ export async function GET() {
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse<InquiryResponse | ApiErrorResponse>> {
   try {
-    const body = await request.json()
+    const body: CreateInquiryRequest = await request.json()
     
     const inquiry = await prisma.inquiry.create({
       data: {
@@ -31,14 +32,14 @@ export async function POST(request: NextRequest) {
         phone: body.phone || null,
         eventType: body.eventType || null,
         eventDate: body.eventDate ? new Date(body.eventDate) : null,
-        guestCount: body.guestCount ? parseInt(body.guestCount) : null,
+        guestCount: body.guestCount ? parseInt(String(body.guestCount)) : null,
         message: body.message,
         status: 'new'
       }
     })
 
     // Send notification email to admin
-    const adminEmailTemplate = emailTemplates.inquiryReceived(body)
+    const adminEmailTemplate = emailTemplates.inquiryReceived(body as EmailTemplateData)
     await sendEmail({
       to: process.env.EMAIL_TO || 'admin@caterers.com',
       ...adminEmailTemplate
@@ -52,7 +53,7 @@ export async function POST(request: NextRequest) {
     })
 
     return NextResponse.json(inquiry, { status: 201 })
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error creating inquiry:', error)
     return NextResponse.json(
       { error: 'Failed to create inquiry' },

@@ -52,11 +52,22 @@ export const ROLE_PERMISSIONS: RolePermissions = {
 export interface NavItem {
   name: string
   href: string
-  icon: any
+  icon: React.ComponentType<{ className?: string }>
   requiredPermission: {
     resource: string
     action: 'create' | 'read' | 'update' | 'delete' | 'manage'
   }
+}
+
+export interface SessionUser {
+  id?: string;
+  email?: string;
+  name?: string | null;
+  role?: 'admin' | 'manager' | 'staff';
+}
+
+export interface UserSession {
+  user?: SessionUser;
 }
 
 /**
@@ -136,9 +147,9 @@ export const ROLE_DESCRIPTIONS = {
 /**
  * Get user role from session
  */
-export function getUserRole(session: any): UserRole | null {
-  if (!session?.user) return null
-  return (session.user as any).role as UserRole
+export function getUserRole(session: UserSession | { user?: { name?: string | null; email?: string; role?: string } } | null): UserRole | null {
+  if (!session?.user?.role) return null
+  return session.user.role as UserRole
 }
 
 /**
@@ -148,11 +159,16 @@ export function requirePermission(
   resource: string,
   action: 'create' | 'read' | 'update' | 'delete' | 'manage'
 ) {
-  return function(handler: Function) {
-    return async function(request: Request, context?: any) {
+  return function<T extends (request: Request, context?: { params?: Record<string, string> }) => Promise<Response>>(
+    handler: T
+  ): (request: Request, context?: { params?: Record<string, string> }) => Promise<Response> {
+    return async function(request: Request, context?: { params?: Record<string, string> }): Promise<Response> {
       // This will be used in API route protection
-      const session = await import('next-auth/next').then(m => m.getServerSession)
+      const { getServerSession } = await import('next-auth/next')
+      const session = await getServerSession()
+      // TODO: Implement session-based permission checking using resource and action parameters
       // Implementation will be completed in API route updates
+      console.log(`Permission check for ${resource}:${action}`, session ? 'authenticated' : 'anonymous')
       return handler(request, context)
     }
   }
