@@ -1,4 +1,3 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## 🍽️ Bhagwati Caterers - Vegetarian Catering Platform
 
@@ -90,19 +89,10 @@ DATABASE_URL="postgresql://user:password@localhost:5432/database"
 NEXTAUTH_SECRET="your-secret-key"
 NEXTAUTH_URL="http://localhost:3000"
 
-# Email Configuration
-EMAIL_FROM="your-email@example.com"
-EMAIL_USER="your-email@example.com"
-EMAIL_PASS="your-app-password"
-EMAIL_TO="admin@example.com"
-
 # WhatsApp
 WHATSAPP_NUMBER="+1234567890"
 NEXT_PUBLIC_WHATSAPP_NUMBER="+1234567890"
 
-# Admin Credentials
-ADMIN_EMAIL="admin@example.com"
-ADMIN_PASSWORD="secure-password"
 ```
 
 ## 📚 Available Scripts
@@ -118,13 +108,6 @@ ADMIN_PASSWORD="secure-password"
 - `npm run db:setup` - Setup PostgreSQL
 - `npm run migrate:postgres` - Migrate from SQLite to PostgreSQL
 
-## 🚢 Deployment
-
-### Vercel (Recommended)
-
-1. Connect your GitHub repository to Vercel
-2. Set environment variables in Vercel dashboard
-3. Deploy automatically on push
 
 ### Manual Deployment
 
@@ -149,7 +132,3 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## 📄 License
 
 This project is private and proprietary to Bhagwati Caterers.
-
-## 🆘 Support
-
-For support, please contact the development team or check the documentation files.
