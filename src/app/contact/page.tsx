@@ -28,14 +28,14 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-    
+
     // Simulate form submission
     await new Promise(resolve => setTimeout(resolve, 2000))
-    
+
     console.log('Form submitted:', formData)
     setIsSubmitting(false)
     setSubmitted(true)
-    
+
     // Reset form after 3 seconds
     setTimeout(() => {
       setSubmitted(false)
@@ -110,19 +110,19 @@ export default function ContactPage() {
         {/* Decorative Background */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-10 left-10 text-6xl text-orange-600 animate-bounce">ॐ</div>
-          <div className="absolute bottom-10 right-10 text-6xl text-green-600 animate-bounce" style={{animationDelay: '1s'}}>🕉️</div>
+          <div className="absolute bottom-10 right-10 text-6xl text-green-600 animate-bounce" style={{ animationDelay: '1s' }}>🕉️</div>
           <div className="absolute top-1/2 left-1/4 text-4xl text-yellow-600 animate-pulse">🌿</div>
-          <div className="absolute top-1/3 right-1/4 text-4xl text-orange-600 animate-pulse" style={{animationDelay: '0.5s'}}>🍃</div>
+          <div className="absolute top-1/3 right-1/4 text-4xl text-orange-600 animate-pulse" style={{ animationDelay: '0.5s' }}>🍃</div>
         </div>
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-16">
             <div className="flex items-center justify-center mb-6">
-              <Sparkles className="h-8 w-8 text-orange-600 mr-3 animate-spin" style={{animationDuration: '3s'}} />
-              <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-orange-600 via-yellow-600 to-green-600 bg-clip-text text-transparent" style={{lineHeight: '1.2', paddingTop: '0.5rem', paddingBottom: '0.5rem'}}>
+              <Sparkles className="h-8 w-8 text-orange-600 mr-3 animate-spin" style={{ animationDuration: '3s' }} />
+              <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-orange-600 via-yellow-600 to-green-600 bg-clip-text text-transparent" style={{ lineHeight: '1.2', paddingTop: '0.5rem', paddingBottom: '0.5rem' }}>
                 आमच्याशी संपर्क साधा
               </h1>
-              <Sparkles className="h-8 w-8 text-green-600 ml-3 animate-spin" style={{animationDuration: '3s', animationDelay: '1s'}} />
+              <Sparkles className="h-8 w-8 text-green-600 ml-3 animate-spin" style={{ animationDuration: '3s', animationDelay: '1s' }} />
             </div>
             <p className="text-2xl text-gray-700 mb-4">Get In Touch With Us</p>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
@@ -170,12 +170,12 @@ export default function ContactPage() {
             <div className="bg-white rounded-3xl shadow-2xl p-8 lg:p-12 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-orange-200 to-yellow-200 rounded-full -translate-y-16 translate-x-16 opacity-50"></div>
               <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-br from-green-200 to-emerald-200 rounded-full translate-y-12 -translate-x-12 opacity-50"></div>
-              
+
               <div className="relative z-10">
                 <h2 className="text-3xl font-bold text-gray-800 mb-2">आपल्या गरजा आम्हाला पाठवा</h2>
                 <p className="text-xl text-gray-700 mb-2">Send Us Your Requirements</p>
                 <p className="text-gray-600 mb-8">खालील फॉर्म भरा आणि आम्ही 2 तासांत आपल्याशी संपर्क साधू! • Fill out the form below and we&apos;ll get back to you within 2 hours!</p>
-                
+
                 {submitted ? (
                   <div className="text-center py-12">
                     <div className="bg-green-100 rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center">
@@ -204,7 +204,7 @@ export default function ContactPage() {
                           placeholder="आपले पूर्ण नाव • Your Full Name"
                         />
                       </div>
-                      
+
                       <div>
                         <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
                           ईमेल पत्ता • Email Address *
@@ -238,7 +238,7 @@ export default function ContactPage() {
                           placeholder="+91 98765 43210"
                         />
                       </div>
-                      
+
                       <div>
                         <label htmlFor="eventType" className="block text-sm font-semibold text-gray-700 mb-2">
                           कार्यक्रमाचा प्रकार • Event Type *
@@ -277,7 +277,7 @@ export default function ContactPage() {
                           className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-300"
                         />
                       </div>
-                      
+
                       <div>
                         <label htmlFor="guestCount" className="block text-sm font-semibold text-gray-700 mb-2">
                           पाहुण्यांची संख्या • Guest Count
@@ -375,22 +375,22 @@ export default function ContactPage() {
                 <div className="flex items-center mb-6">
                   <MapPin className="h-8 w-8 mr-4" />
                   <div>
-                    <h3 className="text-2xl font-bold">आमचे स्थान भेट द्या</h3>
-                    <p className="text-lg text-white/90">Visit Our Location</p>
+                    <h3 className="text-xl font-bold">आमचे स्थान भेट द्या</h3>
+                    <p className="text-xl text-white/90">Visit Our Location</p>
                   </div>
                 </div>
                 <div className="space-y-2 text-lg">
-                  <p>123 Food Street, Andheri West</p>
-                  <p>Mumbai, Maharashtra 400058</p>
+                  <p>Jhulelal Marg, Narayan Nagar</p>
+                  <p>Latur, Maharashtra 413431</p>
                   <p>भारत • India</p>
                 </div>
                 <div className="mt-6 pt-6 border-t border-white/20">
                   <div className="flex items-center">
                     <Clock className="h-6 w-6 mr-3" />
                     <div>
-                      <p className="font-semibold">व्यवसायाचे तास • Business Hours</p>
-                      <p className="text-white/90">सोम - शनि: सकाळी 9:00 - रात्री 9:00 • Mon - Sat: 9:00 AM - 9:00 PM</p>
-                      <p className="text-white/90">रवि: सकाळी 10:00 - संध्याकाळी 6:00 • Sun: 10:00 AM - 6:00 PM</p>
+                      <p className="font-semibold text-lg">व्यवसायाचे तास • Business Hours</p>
+                      <p className="text-white/90 text-base">सोम - शनि: सकाळी 9:00 - रात्री 9:00 • Mon - Sat: 9:00 AM - 9:00 PM</p>
+                      <p className="text-white/90 text-base">रवि: सकाळी 10:00 - संध्याकाळी 6:00 • Sun: 10:00 AM - 6:00 PM</p>
                     </div>
                   </div>
                 </div>
@@ -429,16 +429,16 @@ export default function ContactPage() {
                   We respond to all inquiries within 2 business hours. For urgent queries, call us directly for immediate assistance.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <a 
-                    href="tel:+919057264895" 
+                  <a
+                    href="tel:+919057264895"
                     className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 flex items-center justify-center"
                   >
                     <Phone className="h-5 w-5 mr-2" />
                     आता कॉल करा • Call Now
                   </a>
-                  <a 
-                    href="https://wa.me/919057264895" 
-                    target="_blank" 
+                  <a
+                    href="https://wa.me/919057264895"
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 flex items-center justify-center"
                   >

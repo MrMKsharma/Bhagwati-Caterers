@@ -349,7 +349,7 @@ export default function AboutPage() {
             <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6">
               <Phone className="h-8 w-8 mx-auto mb-4" />
               <h3 className="text-xl font-bold mb-2">फोन करा</h3>
-              <p className="text-white/90">+91 98765 43210</p>
+              <p className="text-white/90">+91 9057264895</p>
             </div>
             <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6">
               <Mail className="h-8 w-8 mx-auto mb-4" />
@@ -359,7 +359,7 @@ export default function AboutPage() {
             <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6">
               <MapPin className="h-8 w-8 mx-auto mb-4" />
               <h3 className="text-xl font-bold mb-2">भेट द्या</h3>
-              <p className="text-white/90">पुणे, महाराष्ट्र</p>
+              <p className="text-white/90">लातूर, महाराष्ट्र</p>
             </div>
           </div>
 

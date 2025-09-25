@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Star, Check, X, Trash2, Eye } from 'lucide-react'
 
 interface Testimonial {
@@ -16,11 +16,33 @@ interface Testimonial {
 
 export default function AdminTestimonialsPage() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([])
-  const [loading] = useState(true) // TODO: Implement proper loading state management
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [filter, setFilter] = useState<'all' | 'pending' | 'approved'>('all')
 
-  // TODO: Implement fetchTestimonials if needed for data loading
+  const fetchTestimonials = async () => {
+    try {
+      setLoading(true)
+      const response = await fetch('/api/admin/testimonials')
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch testimonials')
+      }
+      
+      const data = await response.json()
+      setTestimonials(data.testimonials || [])
+      setError('')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load testimonials')
+      setTestimonials([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchTestimonials()
+  }, [])
 
   const handleApprove = async (id: string) => {
     try {
@@ -32,9 +54,7 @@ export default function AdminTestimonialsPage() {
 
       if (!response.ok) throw new Error('Failed to approve testimonial')
       
-      setTestimonials(prev => 
-        prev.map(t => t.id === id ? { ...t, isApproved: true } : t)
-      )
+      await fetchTestimonials() // Refresh the data
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error')
     }
@@ -50,9 +70,7 @@ export default function AdminTestimonialsPage() {
 
       if (!response.ok) throw new Error('Failed to reject testimonial')
       
-      setTestimonials(prev => 
-        prev.map(t => t.id === id ? { ...t, isApproved: false } : t)
-      )
+      await fetchTestimonials() // Refresh the data
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error')
     }
@@ -68,7 +86,7 @@ export default function AdminTestimonialsPage() {
 
       if (!response.ok) throw new Error('Failed to delete testimonial')
       
-      setTestimonials(prev => prev.filter(t => t.id !== id))
+      await fetchTestimonials() // Refresh the data
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error')
     }

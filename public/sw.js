@@ -4,19 +4,8 @@ const OFFLINE_URL = '/offline'
 // Assets to cache immediately
 const STATIC_CACHE_URLS = [
   '/',
-  '/about',
-  '/services',
-  '/menu',
-  '/packages',
-  '/gallery',
-  '/contact',
   '/offline',
   '/manifest.json',
-  // Stylesheets
-  '/_next/static/css/',
-  // JavaScript bundles
-  '/_next/static/chunks/',
-  // Images
   '/icons/icon-192x192.png',
   '/icons/icon-512x512.png'
 ]
@@ -37,7 +26,15 @@ self.addEventListener('install', (event) => {
     caches.open(CACHE_NAME)
       .then((cache) => {
         console.log('[ServiceWorker] Caching app shell')
-        return cache.addAll(STATIC_CACHE_URLS)
+        // Cache each URL individually to avoid failing on missing files
+        return Promise.allSettled(
+          STATIC_CACHE_URLS.map(url => 
+            cache.add(url).catch(error => {
+              console.warn('[ServiceWorker] Failed to cache:', url, error)
+              return null
+            })
+          )
+        )
       })
       .then(() => {
         // Skip waiting to activate immediately

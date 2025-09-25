@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { useState } from 'react'
 import { Menu, X, Phone, Mail, Sparkles } from 'lucide-react'
 
@@ -43,7 +44,15 @@ const Header = () => {
         <div className="flex justify-between items-center">
           {/* Logo with Regional Touch */}
           <Link href="/" className="flex items-center text-2xl font-bold text-orange-600 transform transition-transform hover:scale-105">
-            <span className="bg-gradient-to-r from-orange-600 to-amber-600 text-white px-3 py-1 rounded-lg mr-2 transform transition-transform hover:rotate-6">भ</span>
+            <div className="mr-3 transform transition-transform hover:rotate-6">
+              <Image
+                src="/images/menu/logo-bhagwati.png"
+                alt="Bhagwati Caterers Logo"
+                width={40}
+                height={40}
+                className="rounded-lg"
+              />
+            </div>
             <span className="bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent">Bhagwati Caterers</span>
           </Link>
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState } from 'react'
 import { Plus, Edit, Trash2, Search, Filter } from 'lucide-react'
 import Image from 'next/image'
 
@@ -61,8 +61,9 @@ export default function MenuItemsPage() {
 
 
 
-  const fetchMenuItems = useCallback(async () => {
+  const fetchMenuItems = async () => {
     try {
+      setLoading(true)
       const response = await fetch('/api/admin/menu-items')
       if (response.ok) {
         const data = await response.json()
@@ -75,11 +76,11 @@ export default function MenuItemsPage() {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }
 
   useEffect(() => {
     fetchMenuItems()
-  }, [fetchMenuItems])
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -221,8 +222,12 @@ export default function MenuItemsPage() {
           </p>
         </div>
         <button
-          onClick={() => setShowForm(true)}
+          onClick={() => {
+            console.log('Add Menu Item clicked')
+            setShowForm(true)
+          }}
           className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          type="button"
         >
           <Plus className="h-4 w-4 mr-2" />
           Add Menu Item
@@ -261,12 +266,35 @@ export default function MenuItemsPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         {filteredItems.map((item) => (
           <div key={item.id} className="bg-white shadow rounded-lg overflow-hidden">
-            <div className="h-48 bg-gradient-to-r from-orange-200 to-orange-300 flex items-center justify-center">
+            <div className="h-48 bg-gradient-to-r from-orange-200 to-orange-300 flex items-center justify-center relative overflow-hidden">
               {item.imageUrl ? (
-                <Image src={item.imageUrl} alt={item.name} fill className="object-cover" />
-              ) : (
-                <span className="text-orange-800 font-medium">No Image</span>
-              )}
+                <Image 
+                  src={item.imageUrl} 
+                  alt={item.name} 
+                  fill
+                  className="object-cover" 
+                  onError={(e) => {
+                    console.log('Image failed to load:', item.imageUrl)
+                    e.currentTarget.style.display = 'none'
+                    const parent = e.currentTarget.parentElement
+                    if (parent) {
+                      const span = parent.querySelector('span')
+                      if (span) span.textContent = 'Image Not Found'
+                    }
+                  }}
+                  onLoad={(e) => {
+                    console.log('Image loaded successfully:', item.imageUrl)
+                    const parent = e.currentTarget.parentElement
+                    if (parent) {
+                      const span = parent.querySelector('span')
+                      if (span) span.style.display = 'none'
+                    }
+                  }}
+                />
+              ) : null}
+              <span className="text-orange-800 font-medium absolute inset-0 flex items-center justify-center">
+                {item.imageUrl ? 'Loading...' : 'No Image'}
+              </span>
             </div>
             
             <div className="p-4">
@@ -288,15 +316,23 @@ export default function MenuItemsPage() {
               
               <div className="flex gap-2">
                 <button
-                  onClick={() => startEdit(item)}
+                  onClick={() => {
+                    console.log('Edit clicked for item:', item.id)
+                    startEdit(item)
+                  }}
                   className="flex-1 inline-flex items-center justify-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+                  type="button"
                 >
                   <Edit className="h-4 w-4 mr-1" />
                   Edit
                 </button>
                 <button
-                  onClick={() => deleteMenuItem(item.id)}
+                  onClick={() => {
+                    console.log('Delete clicked for item:', item.id)
+                    deleteMenuItem(item.id)
+                  }}
                   className="inline-flex items-center justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                  type="button"
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>
@@ -314,11 +350,33 @@ export default function MenuItemsPage() {
 
       {/* Add/Edit Form Modal */}
       {showForm && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-            <h3 className="text-lg font-bold text-gray-900 mb-4">
-              {editingItem ? 'Edit Menu Item' : 'Add New Menu Item'}
-            </h3>
+        <div 
+          className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              resetForm()
+            }
+          }}
+        >
+          <div 
+            className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-bold text-gray-900">
+                {editingItem ? 'Edit Menu Item' : 'Add New Menu Item'}
+              </h3>
+              <button
+                onClick={() => {
+                  console.log('Close modal clicked')
+                  resetForm()
+                }}
+                className="text-gray-400 hover:text-gray-600 text-xl font-bold"
+                type="button"
+              >
+                ×
+              </button>
+            </div>
             
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
@@ -388,7 +446,11 @@ export default function MenuItemsPage() {
                 </button>
                 <button
                   type="button"
-                  onClick={resetForm}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    resetForm()
+                  }}
                   className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
                 >
                   Cancel

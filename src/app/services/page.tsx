@@ -142,9 +142,6 @@ export default function ServicesPage() {
             <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
               आपल्या विशेष प्रसंगांना अस्सल पाककृती आणि अपवादात्मक सेवेसह संस्मरणीय बनवण्यासाठी तयार केलेल्या व्यावसायिक शाकाहारी केटरिंग सेवा.
             </p>
-            <p className="text-lg text-gray-500 mt-4">
-              Professional vegetarian catering services tailored to make your special occasions memorable with authentic cuisine and exceptional service.
-            </p>
           </div>
         </div>
       </section>
@@ -256,10 +253,10 @@ export default function ServicesPage() {
           </h2>
           <p className="text-xl text-white/90 mb-2">Ready to Plan Your Event?</p>
           <p className="text-lg text-white/80 mb-8 max-w-4xl mx-auto">
-            मोफत सल्लामसलतीसाठी आज आमच्याशी संपर्क साधा आणि आम्ही आपल्या कार्यक्रमाला कसे असाधारण बनवू शकतो याची चर्चा करूया.
+            सल्लामसलतीसाठी आज आमच्याशी संपर्क साधा आणि आम्ही आपल्या कार्यक्रमाला कसे असाधारण बनवू शकतो याची चर्चा करूया.
           </p>
           <p className="text-sm text-white/70 mb-8 max-w-3xl mx-auto">
-            Contact us today for a complimentary consultation and let&apos;s discuss how we can make your event extraordinary.
+            Contact us today for consultation and let&apos;s discuss how we can make your event extraordinary.
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <Link 
@@ -267,7 +264,7 @@ export default function ServicesPage() {
               className="bg-white text-orange-600 hover:bg-gray-100 font-bold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg inline-flex items-center justify-center"
             >
               <Calendar className="h-5 w-5 mr-2" />
-              मोफत सल्लामसलत मिळवा • Get Free Consultation
+              सल्लामसलत मिळवा • Get Consultation
             </Link>
             <Link 
               href="/packages" 

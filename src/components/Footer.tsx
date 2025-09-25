@@ -1,5 +1,6 @@
 import Link from 'next/link'
-import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Twitter, Leaf, Award, Heart } from 'lucide-react'
+import Image from 'next/image'
+import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Twitter, Award, Heart } from 'lucide-react'
 
 const Footer = () => {
   return (
@@ -18,7 +19,14 @@ const Footer = () => {
           {/* Company Info */}
           <div>
             <h3 className="text-2xl font-bold text-orange-500 mb-4 flex items-center">
-              <Leaf className="mr-2" /> Bhagwati Caterers
+              <Image 
+                src="/images/menu/logo-bhagwati.png" 
+                alt="Bhagwati Caterers Logo" 
+                width={32} 
+                height={32} 
+                className="mr-2 rounded-md"
+              />
+              Bhagwati Caterers
             </h3>
             <p className="text-gray-300 mb-6 leading-loose devanagari-paragraph">
               महाराष्ट्रातील आघाडीची शुद्ध शाकाहारी भोजन सेवा! आम्ही आपल्या सर्व विशेष प्रसंगांसाठी प्रामाणिक शाकाहारी पाककृती 
@@ -45,7 +53,7 @@ const Footer = () => {
             <ul className="space-y-3">
               <li><Link href="/terms" className="text-gray-300 hover:text-orange-400 transition-colors hover:translate-x-1 transform duration-200 flex items-center"><span className="mr-2">→</span>Terms & Conditions</Link></li>
               <li><Link href="/privacy" className="text-gray-300 hover:text-orange-400 transition-colors hover:translate-x-1 transform duration-200 flex items-center"><span className="mr-2">→</span>Privacy Policy</Link></li>
-              <li><Link href="/refund" className="text-gray-300 hover:text-orange-400 transition-colors hover:translate-x-1 transform duration-200 flex items-center"><span className="mr-2">→</span>परतावा धोरण</Link></li>
+              <li><Link href="/refund" className="text-gray-300 hover:text-orange-400 transition-colors hover:translate-x-1 transform duration-200 flex items-center"><span className="mr-2">→</span>Refund Policy</Link></li>
               <li><Link href="/cancellation" className="text-gray-300 hover:text-orange-400 transition-colors hover:translate-x-1 transform duration-200 flex items-center"><span className="mr-2">→</span>Cancellation Policy</Link></li>
             </ul>
           </div>
@@ -53,29 +61,45 @@ const Footer = () => {
           {/* Contact Info */}
           <div>
             <h4 className="text-lg font-semibold mb-4 text-orange-400">Get In Touch</h4>
-            <div className="space-y-4 text-gray-300">
-              <div className="flex items-start space-x-3 group">
-                <MapPin className="h-5 w-5 text-orange-500 mt-1 flex-shrink-0 group-hover:scale-110 transition-transform" />
-                <span className="group-hover:text-white transition-colors">
-                  123 Food Street, Andheri West<br />
-                  Mumbai, Maharashtra 400058<br />
-                  India
-                </span>
+            <div className="space-y-3 text-gray-300">
+              <div className="flex group">
+                <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center mr-3">
+                  <MapPin className="h-5 w-5 text-orange-500 group-hover:scale-110 transition-transform" />
+                </div>
+                <div className="flex-1">
+                  <span className="group-hover:text-white transition-colors leading-relaxed block">
+                    Bhagwati Caterers, Jhulelal Marg<br />
+                    Narayan Nagar, Latur<br />
+                    Maharashtra, 413431
+                  </span>
+                </div>
               </div>
-              <div className="flex items-center space-x-3 group">
-                <Phone className="h-5 w-5 text-orange-500 group-hover:scale-110 transition-transform" />
-                <a href="tel:+919057264895" className="group-hover:text-white transition-colors">+91 9057264895</a>
+              <div className="flex group">
+                <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center mr-3">
+                  <Phone className="h-5 w-5 text-orange-500 group-hover:scale-110 transition-transform" />
+                </div>
+                <div className="flex-1">
+                  <a href="tel:+919057264895" className="group-hover:text-white transition-colors">+91 9057264895</a>
+                </div>
               </div>
-              <div className="flex items-center space-x-3 group">
-                <Mail className="h-5 w-5 text-orange-500 group-hover:scale-110 transition-transform" />
-                <a href="mailto:info@bhagwaticaterer.in" className="group-hover:text-white transition-colors">info@bhagwaticaterer.in</a>
+              <div className="flex group">
+                <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center mr-3">
+                  <Mail className="h-5 w-5 text-orange-500 group-hover:scale-110 transition-transform" />
+                </div>
+                <div className="flex-1">
+                  <a href="mailto:info@bhagwaticaterer.in" className="group-hover:text-white transition-colors">info@bhagwaticaterer.in</a>
+                </div>
               </div>
-              <div className="flex items-start space-x-3 group">
-                <Clock className="h-5 w-5 text-orange-500 mt-1 group-hover:scale-110 transition-transform" />
-                <span className="group-hover:text-white transition-colors">
-                  Mon - Sat: 9:00 AM - 9:00 PM<br />
-                  Sun: 10:00 AM - 6:00 PM
-                </span>
+              <div className="flex group">
+                <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center mr-3">
+                  <Clock className="h-5 w-5 text-orange-500 group-hover:scale-110 transition-transform" />
+                </div>
+                <div className="flex-1">
+                  <span className="group-hover:text-white transition-colors leading-relaxed block">
+                    Mon - Sat: 9:00 AM - 9:00 PM<br />
+                    Sun: 10:00 AM - 6:00 PM
+                  </span>
+                </div>
               </div>
             </div>
           </div>
